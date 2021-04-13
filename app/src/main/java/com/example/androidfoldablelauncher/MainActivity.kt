@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         var lastLayoutInfo: WindowLayoutInfo? = null
 
         override fun accept(newLayoutInfo: WindowLayoutInfo) {
+            println(newLayoutInfo.displayFeatures)
             updateStateLog(newLayoutInfo)
             //lastLayoutInfo = newLayoutInfo
         }
