@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">AndroidFoldableLauncher</string>
+    <string name="configuration_changed" />
+    <string name="layout_change_text" />
+    <string name="window_metrics" />
 </resources>
