@@ -25,7 +25,7 @@ import java.util.Locale
 import androidx.window.WindowLayoutInfo
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity2 : AppCompatActivity() {
 
     private lateinit var windowManager: WindowManager
     private lateinit var binding: ActivityMainBinding
