@@ -15,6 +15,8 @@ import androidx.core.util.Consumer
 
 import android.graphics.drawable.ColorDrawable
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.window.FoldingFeature
 import java.text.SimpleDateFormat
@@ -52,10 +54,15 @@ class MainActivity : AppCompatActivity() {
         i.addCategory(Intent.CATEGORY_HOME)
         var lst:List<ResolveInfo> = pm.queryIntentActivities(i,0)
         var string:String = ""
+        var stringList: ArrayList<String> = arrayListOf()
+        stringList.add("")
         for (resolveInfo: ResolveInfo in lst) {
             string += resolveInfo.activityInfo.packageName + "\n"
+            stringList.add(resolveInfo.activityInfo.packageName)
         }
-        //setContentView(R.layout.activity_main)
+        var arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(this, R.layout.spinner_item, stringList)
+        var sp1: Spinner = findViewById(R.id.spinner1)
+        sp1.adapter = arrayAdapter
         var tv: TextView = findViewById(R.id.textView)
         tv.text = string
 
