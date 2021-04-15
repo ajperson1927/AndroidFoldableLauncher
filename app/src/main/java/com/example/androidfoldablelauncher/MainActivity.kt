@@ -1,5 +1,8 @@
 package com.example.androidfoldablelauncher
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +15,7 @@ import androidx.core.util.Consumer
 
 import android.graphics.drawable.ColorDrawable
 import android.view.View
+import android.widget.TextView
 import androidx.window.FoldingFeature
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var windowManager: WindowManager
     private lateinit var binding: ActivityMainBinding
+    private lateinit var pm: PackageManager
 
     private val stateLog: StringBuilder = StringBuilder()
     private val stateContainer = StateContainer()
@@ -33,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         windowManager = WindowManager(this)
+        pm = packageManager
 
 
 
@@ -41,6 +47,18 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         windowManager.registerLayoutChangeCallback(Executor { r: Runnable -> Handler(Looper.getMainLooper()).post(r) }, stateContainer)
+
+        var i:Intent = Intent(Intent.ACTION_MAIN)
+        i.addCategory(Intent.CATEGORY_HOME)
+        var lst:List<ResolveInfo> = pm.queryIntentActivities(i,0)
+        var string:String = ""
+        for (resolveInfo: ResolveInfo in lst) {
+            string += resolveInfo.activityInfo.packageName + "\n"
+        }
+        //setContentView(R.layout.activity_main)
+        var tv: TextView = findViewById(R.id.textView)
+        tv.text = string
+
     }
     internal fun updateStateLog(layoutInfo: WindowLayoutInfo) {
         stateLog.append(" ").append(layoutInfo).append("\n")
