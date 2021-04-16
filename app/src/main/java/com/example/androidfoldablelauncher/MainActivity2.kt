@@ -13,15 +13,9 @@ import java.lang.StringBuilder
 import java.util.concurrent.Executor
 import androidx.core.util.Consumer
 
-import android.graphics.drawable.ColorDrawable
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.window.FoldingFeature
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import androidx.window.WindowLayoutInfo
 
 
@@ -61,7 +55,7 @@ class MainActivity2 : AppCompatActivity() {
             stringList.add(resolveInfo.activityInfo.packageName)
         }
         var arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(this, R.layout.spinner_item, stringList)
-        var sp1: Spinner = findViewById(R.id.spinner1)
+        var sp1: Spinner = findViewById(R.id.foldedSpinner)
         sp1.adapter = arrayAdapter
         var tv: TextView = findViewById(R.id.textView)
         tv.text = string
