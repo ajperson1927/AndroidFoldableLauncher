@@ -1,18 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:onClick="launchAndSave"
+        android:text="Save Changes and Launch"
+        app:layout_constraintBaseline_toBaselineOf="@+id/noSaveButton"
+        app:layout_constraintEnd_toStartOf="@+id/noSaveButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/noSaveButton"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="48dp"
+        android:layout_weight="1"
+        android:onClick="launchNoSave"
+        android:text="Discard Changes and Launch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/saveButton" />
+
+    <Spinner
+        android:id="@+id/unfoldedSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="216dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:dropDownWidth="match_parent"
+        android:popupBackground="@android:drawable/divider_horizontal_dark"
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/foldedSpinner" />
+
+    <Spinner
+        android:id="@+id/foldedSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:dropDownWidth="match_parent"
+        android:popupBackground="@android:drawable/divider_horizontal_dark"
+        android:spinnerMode="dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,31 +69,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/foldedSpinner"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="224dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:dropDownWidth="match_parent"
-        android:popupBackground="@android:drawable/divider_horizontal_dark"
-        android:spinnerMode="dialog"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/unfoldedSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
-        android:background="@android:drawable/btn_dropdown"
-        android:dropDownWidth="match_parent"
-        android:popupBackground="@android:drawable/divider_horizontal_dark"
-        android:spinnerMode="dialog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foldedSpinner" />
 </androidx.constraintlayout.widget.ConstraintLayout>
