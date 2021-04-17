@@ -10,10 +10,14 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
+import androidx.window.DeviceState;
+import androidx.window.DisplayFeature;
+import androidx.window.FoldingFeature;
 import androidx.window.WindowLayoutInfo;
 import androidx.window.WindowManager;
 import androidx.window.WindowMetrics;
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
 
+    int foldingState = 0;
+
     //Shared preferences strings
     private final String prefsString = "LauncherSettings";
     private final String foldedString = "foldedSpinner";
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         packageManager = getPackageManager();
         stateContainer = new StateContainer();
         stateLog = new StringBuilder();
+        textView = findViewById(R.id.textView);
 
         //preferences
         sharedPreferences = getSharedPreferences(prefsString,MODE_PRIVATE);
@@ -64,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         foldedSpinner = findViewById(R.id.foldedSpinner);
         unfoldedSpinner = findViewById(R.id.unfoldedSpinner);
 
-        textView = findViewById(R.id.textView);
     }
 
     @Override
@@ -77,7 +83,20 @@ public class MainActivity extends AppCompatActivity {
 
         setupSpinners();
 
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        windowManager.unregisterLayoutChangeCallback(stateContainer);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        launchLauncher();
     }
 
     private void setupSpinners() {
@@ -128,6 +147,20 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        //This determines what state the fold is in, then sets the appropriate intent
+        Intent launcherIntent;
+        switch (foldingState) {
+            case 1:
+                launcherIntent = packageManager.getLaunchIntentForPackage(unfoldedSpinner.getSelectedItem().toString());
+                break;
+            case 2:
+                return;
+            default:
+                launcherIntent = packageManager.getLaunchIntentForPackage(foldedSpinner.getSelectedItem().toString());
+                break;
+        }
+        //Launches the chosen intent
+        startActivity(launcherIntent);
 
     }
 
@@ -136,6 +169,15 @@ public class MainActivity extends AppCompatActivity {
         public void accept(WindowLayoutInfo windowLayoutInfo) {
             stateLog.append(" ").append(windowLayoutInfo).append("\n");
             binding.stateUpdateLog.setText(stateLog);
+
+            List<DisplayFeature> displayFeatures = windowLayoutInfo.getDisplayFeatures();
+
+            if (displayFeatures.isEmpty()) {
+                foldingState = 0;
+            } else {
+                foldingState = ((FoldingFeature) displayFeatures.get(displayFeatures.size() - 1)).getState();
+            }
+            textView.setText("" + foldingState);
         }
     }
 }
