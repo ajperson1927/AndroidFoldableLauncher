@@ -1,5 +1,6 @@
 package com.example.androidfoldablelauncher;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,25 +11,23 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
-import androidx.window.DeviceState;
 import androidx.window.DisplayFeature;
 import androidx.window.FoldingFeature;
 import androidx.window.WindowLayoutInfo;
 import androidx.window.WindowManager;
-import androidx.window.WindowMetrics;
 
 import com.example.androidfoldablelauncher.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-
+//TODO: Create a service that tracks if the phone is opened or closed
 public class MainActivity extends AppCompatActivity {
     private WindowManager windowManager;
     private ActivityMainBinding binding;
@@ -46,11 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
     int foldingState = 0;
 
+    HashMap<String, String> appDictionary;
+
     //Shared preferences strings
     private final String prefsString = "LauncherSettings";
     private final String foldedString = "foldedSpinner";
     private final String unfoldedString = "unfoldedSpinner";
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         //spinners
         foldedSpinner = findViewById(R.id.foldedSpinner);
         unfoldedSpinner = findViewById(R.id.unfoldedSpinner);
+
+        appDictionary = new HashMap<>();
 
     }
 
@@ -113,7 +117,11 @@ public class MainActivity extends AppCompatActivity {
         launcherList.add("Please select a launcher");
 
         for (ResolveInfo resolveInfo : resolveInfoList) {
-            launcherList.add(resolveInfo.activityInfo.packageName);
+            String appName = "" + packageManager.getApplicationLabel(resolveInfo.activityInfo.applicationInfo);
+            String packageName = "" + resolveInfo.activityInfo.packageName;
+
+            appDictionary.put(appName, packageName);
+            launcherList.add(appName);
         }
 
         //Creates an array adapter for the spinners, then sets the spinners' adapter to it
@@ -133,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(unfoldedString,unfoldedSpinner.getSelectedItemPosition());
         editor.apply();
 
+        //TODO: Convert item position to package name. Handle uninstalled launchers
+
         launchLauncher();
     }
 
@@ -151,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
         Intent launcherIntent;
         switch (foldingState) {
             case 1:
-                launcherIntent = packageManager.getLaunchIntentForPackage(unfoldedSpinner.getSelectedItem().toString());
+                launcherIntent = packageManager.getLaunchIntentForPackage(appDictionary.get(unfoldedSpinner.getSelectedItem().toString()));
                 break;
             case 2:
                 return;
             default:
-                launcherIntent = packageManager.getLaunchIntentForPackage(foldedSpinner.getSelectedItem().toString());
+                launcherIntent = packageManager.getLaunchIntentForPackage(appDictionary.get(foldedSpinner.getSelectedItem().toString()));
                 break;
         }
         //Launches the chosen intent
