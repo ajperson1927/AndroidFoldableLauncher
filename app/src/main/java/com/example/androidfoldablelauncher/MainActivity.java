@@ -130,18 +130,25 @@ public class MainActivity extends AppCompatActivity {
         unfoldedSpinner.setAdapter(arrayAdapter);
 
         //Loads the saved spinner states into the spinners
-        foldedSpinner.setSelection(sharedPreferences.getInt(foldedString, -1));
-        unfoldedSpinner.setSelection(sharedPreferences.getInt(unfoldedString, -1));
+        foldedSpinner.setSelection(getSpinnerIndex(foldedSpinner, foldedString));
+        unfoldedSpinner.setSelection(getSpinnerIndex(unfoldedSpinner, unfoldedString));
+    }
 
+    //Takes a string and spinner, and gets the spinner index of the string, Returns 0 if no string found
+    private int getSpinnerIndex(Spinner spinner, String string) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equals(sharedPreferences.getString(string, ""))) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     //Saves the currently selected launcher for each spinner then calls the launcher launcher
     public void launchAndSave(View view) {
-        editor.putInt(foldedString,foldedSpinner.getSelectedItemPosition());
-        editor.putInt(unfoldedString,unfoldedSpinner.getSelectedItemPosition());
+        editor.putString(foldedString, foldedSpinner.getSelectedItem().toString());
+        editor.putString(unfoldedString, unfoldedSpinner.getSelectedItem().toString());
         editor.apply();
-
-        //TODO: Convert item position to package name. Handle uninstalled launchers
 
         launchLauncher();
     }
