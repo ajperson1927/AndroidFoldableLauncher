@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.util.Consumer;
@@ -19,9 +20,11 @@ import androidx.window.DisplayFeature;
 import androidx.window.FoldingFeature;
 import androidx.window.WindowLayoutInfo;
 import androidx.window.WindowManager;
+import androidx.window.WindowBackend;
 
 import com.example.androidfoldablelauncher.databinding.ActivityMainBinding;
 
+import java.security.cert.Extension;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private final String foldedString = "foldedSpinner";
     private final String unfoldedString = "unfoldedSpinner";
 
+
+    private final String nova = "com.teslacoilsw.launcher";
+    private final String sh3 = "com.ss.squarehome2";
+
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        //textView.setText("" + foldingState);
         //This creates an executor to be used by the window manager callback
         Executor executor = runnable -> new Handler(Looper.getMainLooper()).post(runnable);
         windowManager.registerLayoutChangeCallback(executor, stateContainer);
-
         setupSpinners();
 
     }
@@ -99,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //Toast.makeText(this, "TEST", Toast.LENGTH_LONG).show();
+
+
+
+
 
         launchLauncher();
     }
@@ -116,16 +129,19 @@ public class MainActivity extends AppCompatActivity {
         List<String> launcherList = new ArrayList<>();
         launcherList.add("Please select a launcher");
 
+        String packages = "";
         for (ResolveInfo resolveInfo : resolveInfoList) {
             String appName = "" + packageManager.getApplicationLabel(resolveInfo.activityInfo.applicationInfo);
             String packageName = "" + resolveInfo.activityInfo.packageName;
 
+            packages += packageName + "\n";
             appDictionary.put(appName, packageName);
             launcherList.add(appName);
         }
+        textView.setText(packages);
 
         //Creates an array adapter for the spinners, then sets the spinners' adapter to it
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, launcherList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter(this, R.layout.spinner_item, launcherList);
         foldedSpinner.setAdapter(arrayAdapter);
         unfoldedSpinner.setAdapter(arrayAdapter);
 
@@ -149,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(foldedString, foldedSpinner.getSelectedItem().toString());
         editor.putString(unfoldedString, unfoldedSpinner.getSelectedItem().toString());
         editor.apply();
-
         launchLauncher();
     }
 
@@ -194,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 foldingState = ((FoldingFeature) displayFeatures.get(displayFeatures.size() - 1)).getState();
             }
-            textView.setText("" + foldingState);
+            //textView.setText("" + foldingState);
         }
     }
 }
