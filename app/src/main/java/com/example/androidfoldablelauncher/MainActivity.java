@@ -1,6 +1,8 @@
 package com.example.androidfoldablelauncher;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.util.Consumer;
 import androidx.window.DisplayFeature;
 import androidx.window.FoldingFeature;
@@ -81,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         unfoldedSpinner = findViewById(R.id.unfoldedSpinner);
 
         appDictionary = new HashMap<>();
+
+        Intent foldingIntent = new Intent(this, FoldingService.class);
+        //startService(foldingIntent);
 
     }
 
@@ -165,6 +172,10 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(foldedString, foldedSpinner.getSelectedItem().toString());
         editor.putString(unfoldedString, unfoldedSpinner.getSelectedItem().toString());
         editor.apply();
+
+
+
+
         launchLauncher();
     }
 
@@ -191,6 +202,11 @@ public class MainActivity extends AppCompatActivity {
                 launcherIntent = packageManager.getLaunchIntentForPackage(appDictionary.get(foldedSpinner.getSelectedItem().toString()));
                 break;
         }
+
+
+
+
+
         //Launches the chosen intent
         startActivity(launcherIntent);
 
