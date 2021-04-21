@@ -86,19 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
         appDictionary = new HashMap<>();
 
-        Intent foldingIntent = new Intent(this, FoldingService.class);
-        //startService(foldingIntent);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        //textView.setText("" + foldingState);
         //This creates an executor to be used by the window manager callback
         Executor executor = runnable -> new Handler(Looper.getMainLooper()).post(runnable);
         windowManager.registerLayoutChangeCallback(executor, stateContainer);
+
         setupSpinners();
 
     }
@@ -106,20 +102,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
+        //unregisters the callback if the app is closed
         windowManager.unregisterLayoutChangeCallback(stateContainer);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        //Toast.makeText(this, "TEST", Toast.LENGTH_LONG).show();
-
-
-
-
-
+        //Launch correct launcher when app is reopened
         launchLauncher();
     }
 
@@ -173,9 +163,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(unfoldedString, unfoldedSpinner.getSelectedItem().toString());
         editor.apply();
 
-
-
-
         launchLauncher();
     }
 
@@ -190,6 +177,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        int resX = windowManager.getCurrentWindowMetrics().getBounds().width();
+        int resY = windowManager.getCurrentWindowMetrics().getBounds().height();
+
+        if (foldingState != 2) foldingState = (resX < resY / 2) ? 0 : 1;
+
         //This determines what state the fold is in, then sets the appropriate intent
         Intent launcherIntent;
         switch (foldingState) {
@@ -203,10 +195,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-
-
-
-
         //Launches the chosen intent
         startActivity(launcherIntent);
 
@@ -215,8 +203,6 @@ public class MainActivity extends AppCompatActivity {
     class StateContainer implements Consumer<WindowLayoutInfo> {
         @Override
         public void accept(WindowLayoutInfo windowLayoutInfo) {
-            stateLog.append(" ").append(windowLayoutInfo).append("\n");
-            binding.stateUpdateLog.setText(stateLog);
 
             List<DisplayFeature> displayFeatures = windowLayoutInfo.getDisplayFeatures();
 
@@ -225,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 foldingState = ((FoldingFeature) displayFeatures.get(displayFeatures.size() - 1)).getState();
             }
-            //textView.setText("" + foldingState);
         }
     }
 }
