@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.androidfoldablelauncher">
+    package="com.pontiaj2066.foldingphonelauncher">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidFoldableLauncher">
         <activity
-            android:name=".MainActivity"
+            android:name="com.pontiaj2066.foldingphonelauncher.MainActivity"
             android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
             android:stateNotNeeded="true"

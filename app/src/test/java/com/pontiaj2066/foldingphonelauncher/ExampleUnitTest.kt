@@ -1,4 +1,4 @@
-package com.example.androidfoldablelauncher
+package com.pontiaj2066.foldingphonelauncher
 
 import org.junit.Test
 

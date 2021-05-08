@@ -5,38 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/saveButton"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_weight="1"
-        android:background="#0911DB"
+        android:background="#2F3CE9"
         android:onClick="launchAndSave"
         android:text="Save Changes and Launch"
-        app:layout_constraintBaseline_toBaselineOf="@+id/noSaveButton"
-        app:layout_constraintEnd_toStartOf="@+id/noSaveButton"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/noSaveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/noSaveButton"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="48dp"
         android:layout_weight="1"
-        android:background="#0911DB"
+        android:background="#265EEB"
         android:onClick="launchNoSave"
         android:text="Discard Changes and Launch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/saveButton" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/unfoldedSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="216dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:drawable/btn_dropdown"
         android:dropDownWidth="match_parent"
         android:popupBackground="@android:drawable/divider_horizontal_dark"
@@ -44,40 +43,53 @@
         app:layout_constraintBottom_toTopOf="@+id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foldedSpinner" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/foldedSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginBottom="8dp"
         android:background="@android:drawable/btn_dropdown"
         android:dropDownWidth="match_parent"
         android:popupBackground="@android:drawable/divider_horizontal_dark"
         android:spinnerMode="dialog"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/state_update_log"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Folded Launcher:"
+        app:layout_constraintBottom_toTopOf="@+id/foldedSpinner"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Unfolded Launcher:"
+        app:layout_constraintBottom_toTopOf="@+id/unfoldedSpinner"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="282dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/instructionsString"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/foldedSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

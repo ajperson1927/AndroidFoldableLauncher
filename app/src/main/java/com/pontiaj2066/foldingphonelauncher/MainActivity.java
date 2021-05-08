@@ -1,8 +1,6 @@
-package com.example.androidfoldablelauncher;
+package com.pontiaj2066.foldingphonelauncher;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,42 +11,32 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.util.Consumer;
 import androidx.window.DisplayFeature;
 import androidx.window.FoldingFeature;
 import androidx.window.WindowLayoutInfo;
 import androidx.window.WindowManager;
-import androidx.window.WindowBackend;
 
-import com.example.androidfoldablelauncher.databinding.ActivityMainBinding;
+import com.pontiaj2066.foldingphonelauncher.databinding.ActivityMainBinding;
 
-import java.security.cert.Extension;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-//TODO: Create a service that tracks if the phone is opened or closed
 public class MainActivity extends AppCompatActivity {
     private WindowManager windowManager;
     private ActivityMainBinding binding;
     private PackageManager packageManager;
-    private StringBuilder stateLog;
-    private StateContainer stateContainer;
+    private LayoutStateChangeCallback layoutStateChangeCallback;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
     Spinner foldedSpinner;
     Spinner unfoldedSpinner;
-
-    TextView textView;
 
     int foldingState = 0;
 
@@ -59,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private final String foldedString = "foldedSpinner";
     private final String unfoldedString = "unfoldedSpinner";
 
-
-    private final String nova = "com.teslacoilsw.launcher";
-    private final String sh3 = "com.ss.squarehome2";
-
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         windowManager = new WindowManager(this);
         packageManager = getPackageManager();
-        stateContainer = new StateContainer();
-        stateLog = new StringBuilder();
-        textView = findViewById(R.id.textView);
+        layoutStateChangeCallback = new LayoutStateChangeCallback();
 
         //preferences
         sharedPreferences = getSharedPreferences(prefsString,MODE_PRIVATE);
@@ -93,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         //This creates an executor to be used by the window manager callback
         Executor executor = runnable -> new Handler(Looper.getMainLooper()).post(runnable);
-        windowManager.registerLayoutChangeCallback(executor, stateContainer);
+        windowManager.registerLayoutChangeCallback(executor, layoutStateChangeCallback);
 
         setupSpinners();
 
@@ -103,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         //unregisters the callback if the app is closed
-        windowManager.unregisterLayoutChangeCallback(stateContainer);
+        windowManager.unregisterLayoutChangeCallback(layoutStateChangeCallback);
     }
 
     @Override
@@ -126,16 +108,13 @@ public class MainActivity extends AppCompatActivity {
         List<String> launcherList = new ArrayList<>();
         launcherList.add("Please select a launcher");
 
-        String packages = "";
         for (ResolveInfo resolveInfo : resolveInfoList) {
             String appName = "" + packageManager.getApplicationLabel(resolveInfo.activityInfo.applicationInfo);
             String packageName = "" + resolveInfo.activityInfo.packageName;
 
-            packages += packageName + "\n";
             appDictionary.put(appName, packageName);
             launcherList.add(appName);
         }
-        textView.setText(packages);
 
         //Creates an array adapter for the spinners, then sets the spinners' adapter to it
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(this, R.layout.spinner_item, launcherList);
@@ -173,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void launchLauncher() {
         if (foldedSpinner.getSelectedItemPosition() < 1 || unfoldedSpinner.getSelectedItemPosition() < 1) {
-            textView.setText("Please Select a valid launcher");
+            //textView.setText("Please Select a valid launcher");
             return;
         }
 
@@ -200,17 +179,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class StateContainer implements Consumer<WindowLayoutInfo> {
+    class LayoutStateChangeCallback implements Consumer<WindowLayoutInfo> {
         @Override
         public void accept(WindowLayoutInfo windowLayoutInfo) {
 
             List<DisplayFeature> displayFeatures = windowLayoutInfo.getDisplayFeatures();
 
-            if (displayFeatures.isEmpty()) {
-                foldingState = 0;
-            } else {
-                foldingState = ((FoldingFeature) displayFeatures.get(displayFeatures.size() - 1)).getState();
-            }
+            foldingState = (displayFeatures.isEmpty())
+                    ? 0 : ((FoldingFeature) displayFeatures.get(displayFeatures.size() - 1)).getState();
+
         }
     }
 }
